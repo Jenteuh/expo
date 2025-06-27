@@ -21,4 +21,8 @@ public class BestellingService {
         bestellingRepository.create(bestelling);
         ticketsRepository.updateTicketsBeschikbaar(bestelling.getTicketType());
     }
+
+    public long findBestellingId(Bestelling bestelling) {
+        return bestellingRepository.findBestellingId(bestelling);
+    }
 }

@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @Import(BestellingRepository.class)
+@Sql("/bestellingen.sql")
 class BestellingRepositoryTest {
 
     private static final String BESTELLINGEN_TABLE = "bestellingen";
@@ -29,5 +30,12 @@ class BestellingRepositoryTest {
         var aantalRecords = JdbcTestUtils.countRowsInTableWhere(jdbcClient, BESTELLINGEN_TABLE,
                 "naam = 'test3' and ticketType = 2");
         assertThat(aantalRecords).isOne();
+    }
+
+    @Test
+    void findBestellingIdVindtJuisteId() {
+        var bestelling = jdbcClient.sql("select * from bestellingen where naam = 'test1'")
+                        .query(Bestelling.class).single();
+        assertThat(bestellingRepository.findBestellingId(bestelling)).isEqualTo(1);
     }
 }

@@ -1,7 +1,6 @@
 package be.vdab.expo.tickets;
 
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -21,5 +20,17 @@ public class BestellingRepository {
         jdbcClient.sql(sql)
                 .params(bestelling.getNaam(), bestelling.getTicketType())
                 .update();
+    }
+
+    public long findBestellingId(Bestelling bestelling) {
+        var sql = """
+                select id
+                from bestellingen
+                where naam = ? and ticketType = ?;
+                """;
+        return jdbcClient.sql(sql)
+                .params(bestelling.getNaam(), bestelling.getTicketType())
+                .query(Long.class)
+                .single();
     }
 }

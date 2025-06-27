@@ -8,6 +8,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @JdbcTest
 @Import({BestellingService.class, BestellingRepository.class, TicketsRepository.class})
@@ -32,4 +33,13 @@ public class BestellingServiceIntegrationTest {
         assertThat(JdbcTestUtils.countRowsInTableWhere(jdbcClient, BESTELLINGEN_TABLE,
                 "naam = 'test' and ticketType = 3")).isOne();
     }
+
+    @Test
+    void bestellingMetOnvoldoendeBeschikbareTicketsMislukt() {
+        jdbcClient.sql("update tickets set juniorDag = 0").update();
+        assertThatExceptionOfType(OnvoldoendeTicketsBeschikbaarException.class).isThrownBy(
+                () -> bestellingService.create(new Bestelling(0, "test", 3)));
+    }
+
+
 }
