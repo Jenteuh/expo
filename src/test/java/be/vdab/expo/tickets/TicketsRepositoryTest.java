@@ -41,9 +41,8 @@ class TicketsRepositoryTest {
     }
 
     @Test
-    void ticketAvailabilityCheckGooitOnvoldoendeTicketsBeschikbaarException() {
+    void ticketAvailabilityCheckGeeftFalseBijOnvoldoendeTickets() {
         jdbcClient.sql("update tickets set juniorDag = 0").update();
-        assertThatExceptionOfType(OnvoldoendeTicketsBeschikbaarException.class)
-                .isThrownBy(() -> ticketsRepository.ticketAvailabilityCheck(bestelling.getTicketType()));
+        assertThat(ticketsRepository.ticketAvailabilityCheck(bestelling.getTicketType())).isFalse();
     }
 }

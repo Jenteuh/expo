@@ -17,7 +17,9 @@ public class BestellingService {
 
     @Transactional
     public void create(Bestelling bestelling) {
-        ticketsRepository.ticketAvailabilityCheck(bestelling.getTicketType());
+        if (!ticketsRepository.ticketAvailabilityCheck(bestelling.getTicketType())) {
+            throw new OnvoldoendeTicketsBeschikbaarException();
+        }
         bestellingRepository.create(bestelling);
         ticketsRepository.updateTicketsBeschikbaar(bestelling.getTicketType());
     }

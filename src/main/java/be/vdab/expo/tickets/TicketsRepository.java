@@ -24,24 +24,29 @@ public class TicketsRepository {
                 .update();
     }
 
-    public void ticketAvailabilityCheck(int ticketType) {
+    public boolean ticketAvailabilityCheck(int ticketType) {
         var aantalJuniorTickets = jdbcClient.sql("select juniorDag from tickets")
                 .query(Integer.class).single();
         var aantalSeniorTickets = jdbcClient.sql("select seniorDag from tickets")
                 .query(Integer.class).single();
+        var available = true;
 
         switch (ticketType) {
-            case 1: if (aantalJuniorTickets < 1) {
-                throw new OnvoldoendeTicketsBeschikbaarException();
-            }
-            break;
-            case 2: if (aantalSeniorTickets < 1) {
-                throw new OnvoldoendeTicketsBeschikbaarException();
-            }
-            break;
-            case 3: if (aantalJuniorTickets < 1 || aantalSeniorTickets < 1) {
-                throw new OnvoldoendeTicketsBeschikbaarException();
-            }
+            case 1:
+                if (aantalJuniorTickets < 1) {
+                    available = false;
+                }
+                break;
+            case 2:
+                if (aantalSeniorTickets < 1) {
+                    available = false;
+                }
+                break;
+            case 3:
+                if (aantalJuniorTickets < 1 || aantalSeniorTickets < 1) {
+                    available = false;
+                }
         }
+        return available;
     }
 }
