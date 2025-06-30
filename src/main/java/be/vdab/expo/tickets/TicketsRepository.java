@@ -12,33 +12,25 @@ public class TicketsRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public void updateTicketsBeschikbaar(long ticketType) {
-        int juniorDag = 0;
-        int seniorDag = 0;
-        switch ((int) ticketType) {
-            case 1: juniorDag += 1;
-                    break;
-            case 2: seniorDag += 1;
-                    break;
-            case 3: juniorDag += 1;
-                    seniorDag += 1;
-        }
+    public void updateTicketsBeschikbaar(int ticketType) {
+        var tickets = new Tickets(0,0);
+        tickets.welkeDag(ticketType);
         var sql = """
                 UPDATE tickets
                 SET juniorDag = juniorDag - ?, seniorDag = seniorDag - ?
                 """;
         jdbcClient.sql(sql)
-                .params(juniorDag, seniorDag)
+                .params(tickets.getJuniorDag(), tickets.getSeniorDag())
                 .update();
     }
 
-    public void ticketAvailabilityCheck(long ticketType) {
+    public void ticketAvailabilityCheck(int ticketType) {
         var aantalJuniorTickets = jdbcClient.sql("select juniorDag from tickets")
-                .query(Long.class).single();
+                .query(Integer.class).single();
         var aantalSeniorTickets = jdbcClient.sql("select seniorDag from tickets")
-                .query(Long.class).single();
+                .query(Integer.class).single();
 
-        switch ((int) ticketType) {
+        switch (ticketType) {
             case 1: if (aantalJuniorTickets < 1) {
                 throw new OnvoldoendeTicketsBeschikbaarException();
             }

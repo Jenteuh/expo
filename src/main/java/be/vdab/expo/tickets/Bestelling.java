@@ -4,9 +4,9 @@ public class Bestelling {
 
     private long id;
     private String naam;
-    private long ticketType;
+    private int ticketType;
 
-    public Bestelling(long id, String naam, long ticketType) {
+    public Bestelling(long id, String naam, int ticketType) {
 
         if (naam.isEmpty()) {
             throw new IllegalArgumentException("Naam moet ingevuld zijn");
@@ -29,7 +29,7 @@ public class Bestelling {
         return naam;
     }
 
-    public long getTicketType() {
+    public int getTicketType() {
         return ticketType;
     }
 }
