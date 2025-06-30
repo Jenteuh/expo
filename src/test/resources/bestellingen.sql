@@ -1,3 +1,3 @@
-insert into bestellingen(id, naam, ticketType) VALUES
-(1, 'test1', 1),
-(2, 'test2', 3);
+insert into bestellingen(naam, ticketType) VALUES
+('test1', 1),
+('test2', 3);
